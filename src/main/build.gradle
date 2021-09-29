@@ -1,0 +1,85 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+apply plugin: 'idea'
+
+group ARTIFACT_GROUP
+version ARTIFACT_VERSION
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    mavenLocal()
+}
+
+idea {
+    module {
+        sourceDirs += file('java')
+    }
+}
+
+sourceSets.main.java.srcDirs = ['java']
+
+dependencies {
+    implementation 'org.json:json:20201115'
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+// ======== For SDK Releases ========
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'filum-java-sdk'
+            from components.java
+            pom {
+                name = POM_DESCRIPTION
+                description = POM_DESCRIPTION
+                url = POM_URL
+                licenses {
+                    license {
+                        name = POM_LICENCE_NAME
+                        url = POM_LICENCE_URL
+                    }
+                }
+                developers {
+                    developer {
+                        id = POM_DEVELOPER_ID
+                        name = POM_DEVELOPER_NAME
+                        email = POM_DEVELOPER_EMAIL
+                    }
+                }
+                scm {
+                    connection = POM_SCM_CONNECTION
+                    developerConnection = POM_SCM_DEV_CONNECTION
+                    url = POM_SCM_URL
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'mySecureRepository'
+            credentials(org.gradle.api.credentials.PasswordCredentials)
+            url = uri(RELEASE_REPOSITORY_URL)
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}

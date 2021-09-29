@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+group 'com.filum'
+
+repositories {
+    mavenCentral()
+}
+
+idea {
+    module {
+        sourceDirs -= file('java')
+        testSourceDirs += file('java')
+    }
+}
+
+sourceSets.test.java.srcDirs = ['java']
+
+dependencies {
+    testImplementation 'org.json:json:20201115'
+    testImplementation project(':main')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.2'
+    testImplementation 'org.mockito:mockito-inline:3.11.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.11.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+}
+
+test {
+    useJUnitPlatform()
+}
