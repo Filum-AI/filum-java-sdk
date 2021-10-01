@@ -17,6 +17,7 @@ dependencies {
 ```
 
 3. Import and use in code:
+- Update `WRITEKEY` to your Filum source's writekey. You can get the writekey of your source in the source's Overview tab.
 ```java
 import com.filum.Filum;
 import com.filum.exception.FilumException;
@@ -65,6 +66,6 @@ cd src/demo
 gradle build
 ```
 
-5. In your browswer go to `localhost:8080` and you will see Identify and Track event appear in your source Debugging view.
+5. In your browser go to `localhost:8080` and you will see Identify and Track event appear in your source Debugging view.
 
 6. Update your code and rebuild and refresh browser to check for updates from your code modification.
