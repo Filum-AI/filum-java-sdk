@@ -18,13 +18,15 @@ public class DemoController {
 	@RequestMapping("/")
 	public String index() throws FilumException {
 		Filum filum = Filum.getInstance("INSTANCE_NAME");
-		filum.init("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjM0OH0.eTKQX4vcKFkx2jQs7S1GzDwIb9q7xdaqcQr2Ydhgafw");
+		filum.init("WRITEKEY");
 		
 		EventBuilder identifyBuilder = new EventBuilder("identify");
 		JSONObject eventParams = new JSONObject();
 		eventParams.put("name", "Harry Potter");
 		eventParams.put("age", 10);
-		eventParams.put("float_value", 1111.11);
+		eventParams.put("float_value", 1111.11f);
+		double doubleValue = 1234.14341434;
+		eventParams.put("double_value", doubleValue);
 		eventParams.put("date", getCurrentTimeISO());
 		identifyBuilder.setEventParams(eventParams);
 		identifyBuilder.setUserID("+84946113111");

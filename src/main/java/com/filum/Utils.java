@@ -52,7 +52,7 @@ public class Utils {
     else if(value instanceof Float){
         json.put("key", key);
         JSONObject value_json = new JSONObject();
-        value_json.put("float_value", value);
+        value_json.put("double_value", value);
         json.put("value", value_json);
     }
     else if(value instanceof Double){

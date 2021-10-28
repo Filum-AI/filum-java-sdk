@@ -23,6 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.filum.exception.FilumInvalidAPIKeyException;
 import com.filum.util.EventsGenerator;
+import com.filum.exception.FilumException;
+
 
 @ExtendWith(MockitoExtension.class)
 public class FilumTest {
@@ -43,14 +45,14 @@ public class FilumTest {
 
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
-  public void testLogEventSuccess(boolean useBatch)
+  public void testTrackEventSuccess(boolean useBatch)
       throws InterruptedException, NoSuchFieldException, IllegalAccessException,
-          FilumInvalidAPIKeyException {
+          FilumInvalidAPIKeyException, FilumException {
     Filum filum = Filum.getInstance("test");
     filum.init(apiKey);
     filum.useBatchMode(useBatch);
     filum.setLogMode(FilumLog.LogMode.OFF);
-    List<Event> events = EventsGenerator.generateEvents(10, 5, 6);
+    List<Event> events = EventsGenerator.generateEvents(10, 5);
     HttpCall httpCall = getMockHttpCall(filum, useBatch);
     Response response = new Response();
     response.code = 200;
@@ -63,7 +65,7 @@ public class FilumTest {
               return response;
             });
     for (Event event : events) {
-      filum.logEvent(event);
+      filum.track(event);
     }
     assertTrue(latch.await(1L, TimeUnit.SECONDS));
     verify(httpCall, times(1)).syncHttpCallWithEventsBuffer(anyList());
@@ -71,14 +73,14 @@ public class FilumTest {
 
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
-  public void testLogEventWithInvalidKeyException(boolean useBatch)
+  public void testTrackEventWithInvalidKeyException(boolean useBatch)
       throws InterruptedException, NoSuchFieldException, IllegalAccessException,
-          FilumInvalidAPIKeyException {
+          FilumInvalidAPIKeyException, FilumException {
     Filum filum = Filum.getInstance("test");
     filum.init(apiKey);
     filum.useBatchMode(useBatch);
     filum.setLogMode(FilumLog.LogMode.OFF);
-    List<Event> events = EventsGenerator.generateEvents(10, 5, 6);
+    List<Event> events = EventsGenerator.generateEvents(10, 5);
     HttpCall httpCall = getMockHttpCall(filum, useBatch);
     CountDownLatch latch = new CountDownLatch(1);
     when(httpCall.syncHttpCallWithEventsBuffer(anyList()))
@@ -88,7 +90,7 @@ public class FilumTest {
               throw new FilumInvalidAPIKeyException("test");
             });
     for (Event event : events) {
-      filum.logEvent(event);
+      filum.track(event);
     }
     assertTrue(latch.await(1L, TimeUnit.SECONDS));
     verify(httpCall, times(1)).syncHttpCallWithEventsBuffer(anyList());
@@ -96,14 +98,14 @@ public class FilumTest {
 
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
-  public void testLogEventWithInvalidResponse(boolean useBatch)
+  public void testTrackEventWithInvalidResponse(boolean useBatch)
       throws InterruptedException, NoSuchFieldException, IllegalAccessException,
-          FilumInvalidAPIKeyException {
+          FilumInvalidAPIKeyException, FilumException {
     Filum filum = Filum.getInstance("test");
     filum.init(apiKey);
     filum.useBatchMode(useBatch);
     filum.setLogMode(FilumLog.LogMode.OFF);
-    List<Event> events = EventsGenerator.generateEvents(10, 5, 6);
+    List<Event> events = EventsGenerator.generateEvents(10, 5);
     HttpCall httpCall = getMockHttpCall(filum, useBatch);
     Response response = new Response();
     response.code = 400;
@@ -116,14 +118,14 @@ public class FilumTest {
               return response;
             });
     for (Event event : events) {
-      filum.logEvent(event);
+      filum.track(event);
     }
     assertTrue(latch.await(1L, TimeUnit.SECONDS));
     verify(httpCall, atLeast(1)).syncHttpCallWithEventsBuffer(anyList());
   }
 
   private HttpCall getMockHttpCall(Filum filum, boolean useBatch)
-      throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException, FilumException {
     HttpCall httpCall;
     if (useBatch) {
       httpCall = mock(BatchHttpCall.class);

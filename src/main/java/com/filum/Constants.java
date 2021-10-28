@@ -16,12 +16,12 @@ public interface Constants {
   
   // String API_URL = "https://api2.filum.com/2/httpapi";
   // String BATCH_API_URL = "https://api2.filum.com/batch";
-  String API_URL = "https://event.filum.gq/events";
-  String BATCH_API_URL = "https://event.filum.gq/events";
+  String API_URL = "https://event.filum.ai/events";
+  String BATCH_API_URL = "https://event.filum.ai/events";
 
   int NETWORK_TIMEOUT_MILLIS = 10000;
   String SDK_LIBRARY = "filum-java-sdk";
-  String SDK_VERSION = "0.0.1";
+  String SDK_VERSION = "0.0.2";
 
   int MAX_PROPERTY_KEYS = 1024;
   int MAX_STRING_LENGTH = 1000;
